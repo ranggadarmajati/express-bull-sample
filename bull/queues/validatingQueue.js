@@ -6,7 +6,8 @@ const validatingQueue = new Queue('ValidatingQueue', {
         duration: 5000
     },
     redis: {
-        url: process.env.REDIS_URL,
+        port: 6379,
+        host: process.env.REDIST_HOST,
     },
 });
 

@@ -1,0 +1,55 @@
+version: '3.4'
+
+services:
+  bull-express-app:
+    build: .
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    env_file:
+      - ./.env
+    environment:
+      - PORT=3000
+      - HOST=0.0.0.0
+      - ARENA_HOST_ID=QueueMonitor
+      - REDIST_HOST=redis_cache_host
+      - REDIST_PORT=6379
+      - REDIST_PASSWORD=
+      - REDIS_URL=redis://${REDIST_HOST}:${REDIST_PORT}
+    ports:
+      - "3000:3000" # matches actual listener message
+      - "4567:4567" # bull-arena
+    stdin_open: true
+    command: npm start
+  bull-express-worker:
+    build: .
+    volumes:
+      - .:/app/worker
+      - node_modules:/app/worker/node_modules
+    env_file:
+      - ./.env
+    environment:
+      - PORT=3000
+      - HOST=0.0.0.0
+      - ARENA_HOST_ID=QueueMonitor
+      - REDIST_HOST=redis_cache_host
+      - REDIST_PORT=6379
+      - REDIST_PASSWORD=
+      - REDIS_URL=redis://${REDIST_HOST}:${REDIST_PORT}
+    ports:
+      - "3001:3001" # matches actual listener message
+    stdin_open: true
+    command: npm run worker-start
+  redis_cache:
+    container_name: redis_cache_host
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - cache:/data
+volumes:
+  cache:
+    driver: local
+  node_modules:

@@ -6,6 +6,7 @@ class OrderRepository {
     }
 
     async createOrder(order = {}) {
+        console.log(order);
         const newOrder = order;
         const queueOptions = {
             delay: 5000,

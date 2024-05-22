@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha --exit tests/*",
-    "start": "nodemon server.js",
-    "worker-start": "nodemon bull/workers/validatingWorkers.js"
+    "start": "node server.js",
+    "worker-start": "node bull/workers/validatingWorkers.js"
   },
   "license": "MIT",
   "devDependencies": {
